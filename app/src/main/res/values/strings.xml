@@ -54,6 +54,12 @@
     <string name="medium_complexity">Medium</string>
     <string name="high_complexity">High</string>
 
+    <!-- Priority -->
+    <string name="low_priority">Low</string>
+    <string name="normal_priority">Normal</string>
+    <string name="high_priority">High</string>
+    <string name="critical_priority">Critical</string>
+
     <!-- Messages -->
     <string name="no_tasks.message">No tasks in this status.</string>
     <string name="no_work_logs.message">There are no work logs for this task.</string>

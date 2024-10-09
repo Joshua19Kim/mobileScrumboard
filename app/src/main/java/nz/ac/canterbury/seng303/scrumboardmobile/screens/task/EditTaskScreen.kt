@@ -67,6 +67,29 @@ fun EditTaskScreen(
 
     var usernames = remember { mutableMapOf<Int, String>() }
     val context = LocalContext.current
+
+    val statuses = mapOf(
+        Pair(ScrumboardConstants.Status.TO_DO, context.getString(R.string.todo)),
+        Pair(ScrumboardConstants.Status.IN_PROGRESS, context.getString(R.string.in_progress)),
+        Pair(ScrumboardConstants.Status.UNDER_REVIEW, context.getString(R.string.in_review)),
+        Pair(ScrumboardConstants.Status.DONE, context.getString(R.string.done))
+    )
+
+    val complexities = mapOf(
+        Pair(ScrumboardConstants.Complexity.UNSET, context.getString(R.string.unset)),
+        Pair(ScrumboardConstants.Complexity.LOW, context.getString(R.string.low_complexity)),
+        Pair(ScrumboardConstants.Complexity.MEDIUM, context.getString(R.string.medium_complexity)),
+        Pair(ScrumboardConstants.Complexity.HIGH, context.getString(R.string.high_complexity))
+    )
+
+    val priorities = mapOf(
+        Pair(ScrumboardConstants.Priority.UNSET, context.getString(R.string.unset)),
+        Pair(ScrumboardConstants.Priority.LOW, context.getString(R.string.low_priority)),
+        Pair(ScrumboardConstants.Priority.NORMAL, context.getString(R.string.normal_priority)),
+        Pair(ScrumboardConstants.Priority.HIGH, context.getString(R.string.high_priority)),
+        Pair(ScrumboardConstants.Priority.CRITICAL, context.getString(R.string.high_priority))
+    )
+
     LaunchedEffect(taskWithWorkLogs) {
         if (taskWithWorkLogs != null) {
             editTaskViewModel.setTaskProperties(taskWithWorkLogs)
@@ -136,7 +159,7 @@ fun EditTaskScreen(
                     .padding(vertical = 8.dp)
             ) {
                 OutlinedTextField(
-                    value = editTaskViewModel.priority.priority,
+                    value = priorities[editTaskViewModel.priority]!!,
                     onValueChange = {},
                     readOnly = true,
                     label = { Text(ContextCompat.getString(context, R.string.task_priority)) },
@@ -159,7 +182,7 @@ fun EditTaskScreen(
                     ScrumboardConstants.Priority.entries.forEach { priority ->
                         DropdownMenuItem(
                             text = {
-                                Text(text = priority.priority)
+                                Text(text = priorities[priority]!!)
                             },
                             onClick = {
                                 editTaskViewModel.updatePriority(priority)
@@ -177,7 +200,7 @@ fun EditTaskScreen(
                     .padding(vertical = 8.dp)
             ) {
                 OutlinedTextField(
-                    value = editTaskViewModel.complexity.complexity,
+                    value = complexities[editTaskViewModel.complexity]!!,
                     onValueChange = {},
                     readOnly = true,
                     label = { Text(ContextCompat.getString(context, R.string.task_complexity)) },
@@ -200,7 +223,7 @@ fun EditTaskScreen(
                     ScrumboardConstants.Complexity.entries.forEach { complexity ->
                         DropdownMenuItem(
                             text = {
-                                Text(text = complexity.complexity)
+                                Text(text = complexities[complexity]!!)
                             },
                             onClick = {
                                 editTaskViewModel.updateComplexity(complexity)
@@ -237,7 +260,7 @@ fun EditTaskScreen(
                     .padding(vertical = 8.dp)
             ) {
                 OutlinedTextField(
-                    value = editTaskViewModel.status.status,
+                    value = statuses[editTaskViewModel.status]!!,
                     onValueChange = {},
                     readOnly = true,
                     textStyle = TextStyle(fontSize = 12.sp),
@@ -261,7 +284,7 @@ fun EditTaskScreen(
                     ScrumboardConstants.Status.entries.forEach { status ->
                         DropdownMenuItem(
                             text = {
-                                Text(text = status.status)
+                                Text(text = statuses[status]!!)
                             },
                             onClick = {
                                 editTaskViewModel.updateStatus(status)

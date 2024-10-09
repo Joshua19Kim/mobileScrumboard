@@ -58,6 +58,22 @@ fun CreateTaskScreen (
     var integerValue by remember { mutableStateOf("") }
     val context = LocalContext.current
 
+
+    val complexities = mapOf(
+        Pair(ScrumboardConstants.Complexity.UNSET, context.getString(R.string.unset)),
+        Pair(ScrumboardConstants.Complexity.LOW, context.getString(R.string.low_complexity)),
+        Pair(ScrumboardConstants.Complexity.MEDIUM, context.getString(R.string.medium_complexity)),
+        Pair(ScrumboardConstants.Complexity.HIGH, context.getString(R.string.high_complexity))
+    )
+
+    val priorities = mapOf(
+        Pair(ScrumboardConstants.Priority.UNSET, context.getString(R.string.unset)),
+        Pair(ScrumboardConstants.Priority.LOW, context.getString(R.string.low_priority)),
+        Pair(ScrumboardConstants.Priority.NORMAL, context.getString(R.string.normal_priority)),
+        Pair(ScrumboardConstants.Priority.HIGH, context.getString(R.string.high_priority)),
+        Pair(ScrumboardConstants.Priority.CRITICAL, context.getString(R.string.high_priority))
+    )
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -94,7 +110,7 @@ fun CreateTaskScreen (
                     .padding(vertical = 8.dp)
             ) {
                 OutlinedTextField(
-                    value = selectedPriority.priority,
+                    value = priorities[selectedPriority]!!,
                     onValueChange = {},
                     readOnly = true,
                     label = { Text(ContextCompat.getString(context, R.string.task_priority)) },
@@ -117,7 +133,7 @@ fun CreateTaskScreen (
                     ScrumboardConstants.Priority.entries.forEach { priority ->
                         DropdownMenuItem(
                             text = {
-                                Text(text = priority.priority)
+                                Text(text = priorities[priority]!!)
                             },
                             onClick = {
                                 onPriorityChange(priority)
@@ -135,7 +151,7 @@ fun CreateTaskScreen (
                     .padding(vertical = 8.dp)
             ) {
                 OutlinedTextField(
-                    value = selectedComplexity.complexity,
+                    value = complexities[selectedComplexity]!!,
                     onValueChange = {},
                     readOnly = true,
                     label = { Text(ContextCompat.getString(context, R.string.task_complexity)) },
@@ -158,7 +174,7 @@ fun CreateTaskScreen (
                     ScrumboardConstants.Complexity.entries.forEach { complexity ->
                         DropdownMenuItem(
                             text = {
-                                Text(text = complexity.complexity)
+                                Text(text = complexities[complexity]!!)
                             },
                             onClick = {
                                 onComplexityChange(complexity)

@@ -27,7 +27,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
@@ -134,14 +133,19 @@ fun ScrollableStatusCards(navController: NavController,
     val coroutineScope = rememberCoroutineScope()
     var currentStatusIndex by remember { mutableIntStateOf(0) }
     val cardWidth = remember { mutableIntStateOf(0) }
-
+    val statusList = mapOf(
+        Pair(ScrumboardConstants.Status.TO_DO, context.getString(R.string.todo)),
+        Pair(ScrumboardConstants.Status.IN_PROGRESS, context.getString(R.string.in_progress)),
+        Pair(ScrumboardConstants.Status.UNDER_REVIEW, context.getString(R.string.in_review)),
+        Pair(ScrumboardConstants.Status.DONE, context.getString(R.string.done))
+    ).entries.toList()
     Column {
         LazyRow(
             state = listState,
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            itemsIndexed(ScrumboardConstants.Status.entries) { _, status ->
+            itemsIndexed(statusList) { _, status ->
                 ElevatedCard(
                     modifier = Modifier
                         .fillParentMaxHeight(0.7f)
@@ -165,7 +169,7 @@ fun ScrollableStatusCards(navController: NavController,
                         TaskList(
                             navController = navController,
                             tasks =  storyWithTasks.tasks,
-                            status = status,
+                            statusMap = status,
                             context = context
                         )
                     }
@@ -226,7 +230,12 @@ fun PaginatedStatusButtons(
     onStatusChange: (Int) -> Unit,
     context: Context
 ) {
-    val statuses = ScrumboardConstants.Status.entries
+    val statuses = mapOf(
+        Pair(ScrumboardConstants.Status.TO_DO, context.getString(R.string.todo)),
+        Pair(ScrumboardConstants.Status.IN_PROGRESS, context.getString(R.string.in_progress)),
+        Pair(ScrumboardConstants.Status.UNDER_REVIEW, context.getString(R.string.in_review)),
+        Pair(ScrumboardConstants.Status.DONE, context.getString(R.string.done))
+    ).entries.toList()
 
     Row(
         modifier = Modifier
@@ -250,7 +259,7 @@ fun PaginatedStatusButtons(
         }
 
         Text(
-            text = statuses[currentStatusIndex].status,
+            text = statuses[currentStatusIndex].value,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold
         )
@@ -275,25 +284,25 @@ fun PaginatedStatusButtons(
 @Composable
 fun TaskList(
     navController: NavController,
-    status: ScrumboardConstants.Status,
+    statusMap: Map.Entry<ScrumboardConstants.Status, String>,
     tasks: List<Task>,
     context: Context
 ) {
-    val filteredTasks = tasks.filter { it.status == status }
+    val filteredTasks = tasks.filter { it.status == statusMap.key }
     Column(
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
     ) {
         Text(
-            text = status.status,
+            text = statusMap.value,
             style = MaterialTheme.typography.headlineSmall,
             textAlign = TextAlign.Start
         )
         if (filteredTasks.isNotEmpty()) {
             Column {
                 Spacer(modifier = Modifier.height(16.dp))
-                tasks.filter { it.status == status }.forEach { task ->
+                tasks.filter { it.status == statusMap.key }.forEach { task ->
                     TaskCard(navController = navController, task = task)
                     Spacer(modifier = Modifier.height(8.dp))
                 }

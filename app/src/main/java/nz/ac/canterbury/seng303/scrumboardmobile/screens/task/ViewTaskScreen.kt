@@ -33,7 +33,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +42,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.scrumboardmobile.R
+import nz.ac.canterbury.seng303.scrumboardmobile.models.ScrumboardConstants
 import nz.ac.canterbury.seng303.scrumboardmobile.models.TaskWithWorkLogs
 import nz.ac.canterbury.seng303.scrumboardmobile.models.User
 import nz.ac.canterbury.seng303.scrumboardmobile.models.WorkLog
@@ -144,6 +144,27 @@ fun TaskCard(
     assignedTo: String?,
     reviewer: String?
 ) {
+    val statuses = mapOf(
+        Pair(ScrumboardConstants.Status.TO_DO, context.getString(R.string.todo)),
+        Pair(ScrumboardConstants.Status.IN_PROGRESS, context.getString(R.string.in_progress)),
+        Pair(ScrumboardConstants.Status.UNDER_REVIEW, context.getString(R.string.in_review)),
+        Pair(ScrumboardConstants.Status.DONE, context.getString(R.string.done))
+    )
+
+    val complexities = mapOf(
+        Pair(ScrumboardConstants.Complexity.UNSET, context.getString(R.string.unset)),
+        Pair(ScrumboardConstants.Complexity.LOW, context.getString(R.string.low_complexity)),
+        Pair(ScrumboardConstants.Complexity.MEDIUM, context.getString(R.string.medium_complexity)),
+        Pair(ScrumboardConstants.Complexity.HIGH, context.getString(R.string.high_complexity))
+    )
+
+    val priorities = mapOf(
+        Pair(ScrumboardConstants.Priority.UNSET, context.getString(R.string.unset)),
+        Pair(ScrumboardConstants.Priority.LOW, context.getString(R.string.low_priority)),
+        Pair(ScrumboardConstants.Priority.NORMAL, context.getString(R.string.normal_priority)),
+        Pair(ScrumboardConstants.Priority.HIGH, context.getString(R.string.high_priority)),
+        Pair(ScrumboardConstants.Priority.CRITICAL, context.getString(R.string.high_priority))
+    )
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
@@ -185,17 +206,17 @@ fun TaskCard(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = taskWithWorkLogs.task.status.status,
+                    text = statuses[taskWithWorkLogs.task.status]!!,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "${taskWithWorkLogs.task.complexity.complexity} ${ContextCompat.getString(context, R.string.complexity)}",
+                    text = "${ContextCompat.getString(context, R.string.complexity)}: ${complexities[taskWithWorkLogs.task.complexity]}",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = "${taskWithWorkLogs.task.priority.priority} ${ContextCompat.getString(context, R.string.priority)}",
+                    text = "${ContextCompat.getString(context, R.string.priority)}: ${priorities[taskWithWorkLogs.task.priority]}",
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Bold
                 )
