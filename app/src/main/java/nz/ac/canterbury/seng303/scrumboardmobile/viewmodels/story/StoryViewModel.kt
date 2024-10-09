@@ -18,9 +18,11 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import nz.ac.canterbury.seng303.scrumboardmobile.R
 import nz.ac.canterbury.seng303.scrumboardmobile.dao.StoryDao
 import nz.ac.canterbury.seng303.scrumboardmobile.models.Story
@@ -36,6 +38,9 @@ class StoryViewModel (private val storyDao: StoryDao, private val context: Conte
 
     private val _selectedStoryWithTasks = MutableStateFlow<StoryWithTasks?>(null)
     val selectedStoryWithTasks: StateFlow<StoryWithTasks?> = _selectedStoryWithTasks
+
+    private val _selectedStory = MutableStateFlow<Story?>(null)
+    val selectedStory: StateFlow<Story?> = _selectedStory
 
     private val _storiesWithTasks = MutableStateFlow<List<StoryWithTasks>>(emptyList())
     val storiesWithTasks: StateFlow<List<StoryWithTasks>> get() = _storiesWithTasks
@@ -88,6 +93,32 @@ class StoryViewModel (private val storyDao: StoryDao, private val context: Conte
             _selectedStoryWithTasks.value = storyDao.getStoryWithTasks(storyId).first()
         } else {
             _selectedStoryWithTasks.value = null
+        }
+    }
+
+    fun getStory(storyId: Int?) = viewModelScope.launch {
+        if (storyId != null) {
+            _selectedStory.value = storyDao.getStory(storyId).first()
+        } else {
+            _selectedStory.value = null
+        }
+    }
+
+    fun updateStory(story: Story) = viewModelScope.launch {
+
+        try {
+            storyDao.updateStory(story)
+            Log.d("STORY_VIEW_MODEL", "Story has been updated with id: ${story.storyId}")
+            if (story.dueAt >= System.currentTimeMillis()){
+                scheduleNotifications(
+                    context.getString(R.string.story_due_message, story.title),
+                    Instant.fromEpochMilliseconds(story.dueAt)
+                        .toLocalDateTime(TimeZone.currentSystemDefault())
+                )
+
+            }
+        } catch (e: Exception) {
+            Log.e("STORY_VIEW_MODEL", "Could not update Story", e)
         }
     }
 

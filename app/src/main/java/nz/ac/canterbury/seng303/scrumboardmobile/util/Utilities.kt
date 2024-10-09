@@ -12,6 +12,13 @@ fun convertTimestampToReadableTime(timestamp: Long): String {
     return dateFormat.format(calendar.time)
 }
 
+fun convertTimestampToReadableDate(timestamp: Long): String {
+    val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = timestamp
+    return dateFormat.format(calendar.time)
+}
+
 fun hashPassword(password: String, algorithm: String = "SHA-256"): String {
     val bytes = MessageDigest
         .getInstance(algorithm)

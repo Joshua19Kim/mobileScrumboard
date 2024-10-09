@@ -24,6 +24,8 @@ interface StoryDao {
     @Transaction
     @Query("SELECT * FROM Story WHERE storyId = :storyId")
     fun getStoryWithTasks(storyId: Int): Flow<StoryWithTasks>
+    @Query("SELECT * FROM Story WHERE storyId = :storyId")
+    fun getStory(storyId: Int): Flow<Story>
     @Transaction
     @Query("SELECT * FROM Story")
     fun getAllStoriesWithTasks(): Flow<List<StoryWithTasks>>

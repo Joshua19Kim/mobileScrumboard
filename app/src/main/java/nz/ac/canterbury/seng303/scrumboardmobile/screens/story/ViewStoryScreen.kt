@@ -27,6 +27,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.CardDefaults
@@ -42,7 +44,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.scrumboardmobile.R
@@ -82,11 +83,22 @@ fun ViewStoryScreen(
                         .padding(16.dp)
                 ) {
                     Column {
-                        Text(
-                            text = storyWithTasks.story.title,
-                            style = MaterialTheme.typography.headlineMedium,
-                            textAlign = TextAlign.Start
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = storyWithTasks.story.title,
+                                style = MaterialTheme.typography.headlineMedium,
+                                textAlign = TextAlign.Start
+                            )
+                            IconButton(onClick = { navController.navigate("Story/$storyId/edit") }) {
+                                Icon(Icons.Default.Edit, contentDescription = ContextCompat.getString(context, R.string.edit_label))
+                            }
+                        }
+
                         Text(
                             text = storyWithTasks.story.description,
                             style = MaterialTheme.typography.bodyMedium,

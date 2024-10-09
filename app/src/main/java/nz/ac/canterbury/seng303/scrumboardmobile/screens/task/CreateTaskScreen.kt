@@ -50,7 +50,8 @@ fun CreateTaskScreen (
     selectedComplexity: ScrumboardConstants.Complexity,
     onComplexityChange: (ScrumboardConstants.Complexity) -> Unit,
 
-    createTaskFn: (String, String, Int, ScrumboardConstants.Priority, ScrumboardConstants.Complexity) -> Unit
+    createTaskFn: (String, String, Int, ScrumboardConstants.Priority, ScrumboardConstants.Complexity) -> Unit,
+    storyId: String
 ) {
     var expandedPriority by remember { mutableStateOf(false) }
     var expandedComplexity by remember { mutableStateOf(false) }
@@ -213,7 +214,7 @@ fun CreateTaskScreen (
                             onDescriptionChange("")
                             onPriorityChange(ScrumboardConstants.Priority.UNSET)
                             onComplexityChange(ScrumboardConstants.Complexity.UNSET)
-                            navController.navigate("AllStories")
+                            navController.navigate("Story/$storyId")
                         }
                     }
                 },

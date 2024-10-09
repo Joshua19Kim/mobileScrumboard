@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import kotlinx.coroutines.flow.Flow
 import nz.ac.canterbury.seng303.scrumboardmobile.models.WorkLog
 
 @Dao
@@ -19,4 +20,6 @@ interface WorkLogDao {
     @Transaction
     @Query("SELECT userId FROM WorkLog WHERE workLogId = :workLogId")
     fun getUserIdWithUsers(workLogId: Int): Int?
+    @Query("SELECT * from WorkLog WHERE workLogId = :workLogId")
+    fun getWorkLog(workLogId: Int): Flow<WorkLog>
 }

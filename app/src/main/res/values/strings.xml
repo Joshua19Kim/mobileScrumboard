@@ -5,11 +5,14 @@
     <!-- Button Labels -->
     <string name="view_stories.label">View Stories</string>
     <string name="create_a_story.label">Create a Story</string>
+    <string name="edit_story.label">Edit Story</string>
     <string name="log_out.label">Log Out</string>
     <string name="add_task.label">Add Task</string>
     <string name="create_task.label">Create Task</string>
     <string name="create_a_task.label">Create a Task</string>
     <string name="create_work_log.label">Add Work Log</string>
+    <string name="edit_work_log.label">Edit Work Log</string>
+
     <string name="create.label">Create</string>
     <string name="create_story.label">Create Story</string>
     <string name="ok.label">OK</string>
@@ -18,7 +21,10 @@
     <string name="register.label">Register</string>
     <string name="enable.label">Enable</string>
     <string name="back.label">Back</string>
+    <string name="edit.label">Edit</string>
     <string name="save.label">Save</string>
+
+
 
 
 
@@ -104,6 +110,8 @@
     <string name="assignee">Assignee</string>
     <string name="reviewer">Reviewer</string>
     <string name="task_updated">Task Updated</string>
+    <string name="work_log_added_by">Added by</string>
+    <string name="work_log_added_by_loading">Loading…</string>
 
     <!-- Create Work Log -->
     <string name="date">Date</string>

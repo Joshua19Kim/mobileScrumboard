@@ -54,6 +54,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.story.CreateStoryScreen
+import nz.ac.canterbury.seng303.scrumboardmobile.screens.story.EditStoryScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.task.CreateTaskScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.user.RegisterUserScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.story.ViewAllStories
@@ -61,10 +62,12 @@ import nz.ac.canterbury.seng303.scrumboardmobile.screens.story.ViewStoryScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.task.ViewTaskScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.workLog.CreateWorkLogScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.user.LoginUserScreen
+import nz.ac.canterbury.seng303.scrumboardmobile.screens.workLog.EditWorkLogScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.ui.theme.ScrumBoardTheme
 import nz.ac.canterbury.seng303.scrumboardmobile.util.hashPassword
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.common.AppBarViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.story.CreateStoryViewModel
+import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.story.EditStoryViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.story.StoryViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.task.CreateTaskViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.task.TaskViewModel
@@ -72,6 +75,7 @@ import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.CreateUserViewM
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserLoginModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.workLog.CreateWorkLogViewModel
+import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.workLog.EditWorkLogViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.workLog.WorkLogViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
 
@@ -155,8 +159,13 @@ class MainActivity : ComponentActivity() {
                     Box(modifier = Modifier.padding(it)) {
                         val createUserViewModel: CreateUserViewModel = viewModel()
                         val createStoryViewModel: CreateStoryViewModel = viewModel()
+                        val editStoryViewModel: EditStoryViewModel = viewModel()
+
                         val createTaskViewModel: CreateTaskViewModel = viewModel()
+
                         val createWorkLogViewModel: CreateWorkLogViewModel = viewModel()
+                        val editWorkLogViewModel: EditWorkLogViewModel = viewModel()
+
                         val userLoginModel: UserLoginModel = viewModel()
 
                         NavHost(navController = navController, startDestination = "Home") {
@@ -245,6 +254,34 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
+                            composable("Story/{storyId}/edit", arguments = listOf(navArgument("storyId") {
+                                type = NavType.StringType
+                            })) { backStackEntry ->
+                            val storyId = backStackEntry.arguments?.getString("storyId")
+                            storyId?.let { storyIdParam: String ->
+                                EditStoryScreen(
+                                    navController = navController,
+                                    storyViewModel = storyViewModel,
+                                    storyId = storyIdParam,
+                                    title = editStoryViewModel.title,
+                                    onTitleChange = { newTitle ->
+                                        editStoryViewModel.updateTitle(newTitle)
+                                    },
+                                    description = editStoryViewModel.description,
+                                    onDescriptionChange = { newDescription ->
+                                        editStoryViewModel.updateDescription(newDescription)
+                                    },
+                                    dateTime = editStoryViewModel.dueAt,
+                                    onDateTimeChange = { newDate -> editStoryViewModel.updateDueAt(newDate)},
+
+                                    clearFields = { editStoryViewModel.clearFields() },
+                                    populateFields = { story -> editStoryViewModel.setDefaultValues(story)}
+                                )
+                            }
+
+                        }
+
+
                             composable("Story/{storyId}", arguments = listOf(navArgument("storyId") {
                                 type = NavType.StringType
                             })) { backStackEntry ->
@@ -293,7 +330,8 @@ class MainActivity : ComponentActivity() {
                                                 estimate,
                                                 storyIdParam.toInt()
                                             )
-                                        }
+                                        },
+                                        storyId = storyId
                                     )
                                 }
                             }
@@ -336,6 +374,27 @@ class MainActivity : ComponentActivity() {
                                         createWorkLogViewModel = createWorkLogViewModel,
                                         workLogViewModel = workLogViewModel,
                                         taskId = taskId.toInt()
+                                    )
+                                }
+                            }
+
+                            composable(
+                                "Story/{storyId}/Task/{taskId}/WorkLog/{workLogId}/edit",
+                                arguments = listOf(
+                                    navArgument("storyId") { type = NavType.StringType },
+                                    navArgument("taskId") { type = NavType.StringType },
+                                    navArgument("workLogId") { type = NavType.StringType }
+                                )
+                            ) { backStackEntry ->
+                                val workLogId = backStackEntry.arguments?.getString("workLogId")
+                                val currentUserIdState by currentUserId.collectAsState(initial = -1)
+
+                                if (workLogId != null) {
+                                    EditWorkLogScreen(
+                                        workLogId = workLogId,
+                                        navController = navController,
+                                        editWorkLogViewModel = editWorkLogViewModel,
+                                        workLogViewModel = workLogViewModel,
                                     )
                                 }
                             }

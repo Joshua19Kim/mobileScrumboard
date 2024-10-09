@@ -23,7 +23,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.AssistChip
@@ -68,6 +70,8 @@ import nz.ac.canterbury.seng303.scrumboardmobile.R
 import nz.ac.canterbury.seng303.scrumboardmobile.models.ScrumboardConstants
 import nz.ac.canterbury.seng303.scrumboardmobile.models.TaskWithWorkLogs
 import nz.ac.canterbury.seng303.scrumboardmobile.models.User
+import nz.ac.canterbury.seng303.scrumboardmobile.util.convertTimestampToReadableDate
+import nz.ac.canterbury.seng303.scrumboardmobile.util.convertTimestampToReadableTime
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.task.TaskViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserViewModel
 import java.text.SimpleDateFormat
@@ -546,9 +550,7 @@ fun ViewTaskScreen(
                                 // Date in the top-left
                                 Text(
                                     text =
-                                        SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(
-                                            Date(workLog.time)
-                                        ),
+                                        convertTimestampToReadableDate(workLog.time),
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier.align(Alignment.CenterVertically)
                                 )
@@ -573,9 +575,18 @@ fun ViewTaskScreen(
                             Divider(modifier = Modifier.padding(vertical = 8.dp))
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(text = "Added by ${usernames.value[workLog.userId] ?: "Loading..."}")
+                                Text(text = "${ContextCompat.getString(context, R.string.work_log_added_by)} ${usernames.value[workLog.userId] ?: ContextCompat.getString(context, R.string.work_log_added_by_loading)}")
+                                IconButton(
+                                    onClick = {navController.navigate("Story/$storyId/Task/$taskId/WorkLog/${workLog.workLogId}/edit")}
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Edit,
+                                        contentDescription = "Edit"
+                                    )
+                                }
                             }
                             Spacer(modifier = Modifier.height(8.dp))
                         }
