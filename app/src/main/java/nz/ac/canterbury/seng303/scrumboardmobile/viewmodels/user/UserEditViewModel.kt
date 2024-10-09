@@ -4,21 +4,27 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import nz.ac.canterbury.seng303.scrumboardmobile.models.User
 
-class CreateUserViewModel: ViewModel() {
+class UserEditViewModel: ViewModel() {
     var username by mutableStateOf("")
-        private set
     fun updateUsername(newUsername: String) {
         username = newUsername
     }
     var email by mutableStateOf("")
-        private set
     fun updateEmail(newEmail: String) {
         email = newEmail
     }
     var password by mutableStateOf("")
-    fun updatePassword(newPassword: String) {
-        password = newPassword
+
+    var oldPassword by mutableStateOf("")
+    fun updateOldPassword(oldPasswordInput: String) {
+        oldPassword = oldPasswordInput
+    }
+
+    var newPassword by mutableStateOf("")
+    fun updateNewPassword(newPasswordInput: String) {
+        newPassword = newPasswordInput
     }
     var firstName by mutableStateOf("")
     fun updateFirstName(newFirstName: String) {
@@ -28,8 +34,12 @@ class CreateUserViewModel: ViewModel() {
     fun updateLastName(newLastName: String) {
         lastName = newLastName
     }
-    var userEmail by mutableStateOf("")
-    fun updateUserEmail(newUserEmail: String) {
-        userEmail = newUserEmail
+
+    fun setUserProperties(user: User) {
+        username = user.username
+        email = user.email
+        password = user.password
+        firstName = user.firstName
+        lastName = user.lastName
     }
 }

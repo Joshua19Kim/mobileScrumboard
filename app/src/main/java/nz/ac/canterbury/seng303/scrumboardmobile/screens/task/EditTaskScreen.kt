@@ -454,7 +454,7 @@ fun EditTaskScreen(
                                             assignedUser?.let { user ->
                                                 val intent = Intent(Intent.ACTION_SENDTO).apply {
                                                     data = Uri.parse("mailto:")
-                                                    putExtra(Intent.EXTRA_EMAIL, arrayOf(user.username))
+                                                    putExtra(Intent.EXTRA_EMAIL, arrayOf(user.email))
                                                     putExtra(Intent.EXTRA_SUBJECT, "You Have Been Assigned To '${taskWithWorkLogs.task.title}'")
                                                     putExtra(Intent.EXTRA_TEXT, "I have assigned you to a Scrumboard Mobile task: '${taskWithWorkLogs.task.title}'")
                                                 }

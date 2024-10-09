@@ -12,17 +12,21 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -33,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -55,14 +60,16 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.story.CreateStoryScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.story.EditStoryScreen
-import nz.ac.canterbury.seng303.scrumboardmobile.screens.task.CreateTaskScreen
-import nz.ac.canterbury.seng303.scrumboardmobile.screens.user.RegisterUserScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.story.ViewAllStories
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.story.ViewStoryScreen
+import nz.ac.canterbury.seng303.scrumboardmobile.screens.task.CreateTaskScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.task.EditTaskScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.task.ViewTaskScreen
-import nz.ac.canterbury.seng303.scrumboardmobile.screens.workLog.CreateWorkLogScreen
+import nz.ac.canterbury.seng303.scrumboardmobile.screens.user.EditUserScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.user.LoginUserScreen
+import nz.ac.canterbury.seng303.scrumboardmobile.screens.user.RegisterUserScreen
+import nz.ac.canterbury.seng303.scrumboardmobile.screens.user.UserProfileScreen
+import nz.ac.canterbury.seng303.scrumboardmobile.screens.workLog.CreateWorkLogScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.workLog.EditWorkLogScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.ui.theme.ScrumBoardTheme
 import nz.ac.canterbury.seng303.scrumboardmobile.util.hashPassword
@@ -75,12 +82,14 @@ import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.task.EditTaskViewMod
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.task.TaskViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.task.ViewTaskViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.CreateUserViewModel
+import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserEditViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserLoginModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.workLog.CreateWorkLogViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.workLog.EditWorkLogViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.workLog.WorkLogViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel as koinViewModel
+
 
 class MainActivity : ComponentActivity() {
     private val userViewModel: UserViewModel by koinViewModel()
@@ -134,31 +143,34 @@ class MainActivity : ComponentActivity() {
                 val appBarViewModel: AppBarViewModel = viewModel()
                 appBarViewModel.init()
                 Scaffold(
-                    topBar = {
-                        // Add your AppBar content here
-                        TopAppBar(
-                            title = {
-                                navBackStackEntry?.destination?.route?.let { route ->
-                                    appBarViewModel.getNameById(route)?.run {
-                                        Text(this)
-                                    }
+                    bottomBar = {
+                        Row(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceAround,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            IconButton(onClick = {
+                                navController.navigate("AllStories") {
+                                    popUpTo(0) { inclusive = true }
                                 }
-                            },
-                            navigationIcon = {
-                                if (navBackStackEntry?.destination?.route != "Home") {
-                                    IconButton(onClick = { navController.popBackStack() }) {
-                                        Icon(
-                                            imageVector = Icons.Default.ArrowBack,
-                                            contentDescription = "Back"
-                                        )
-                                    }
-                                }
+                            }) {
+                                Icon(Icons.Default.Home, contentDescription = "Home", modifier = Modifier.size(48.dp))
                             }
-                        )
-
+                            IconButton(onClick = {
+                                navController.navigate("CreateStory")
+                            }) {
+                                Icon(Icons.Default.Add, contentDescription = "Create Story", modifier = Modifier.size(48.dp))
+                            }
+                            IconButton(onClick = {
+                                navController.navigate("Profile")
+                            }) {
+                                Icon(Icons.Default.Person, contentDescription = "Profile", modifier = Modifier.size(48.dp))
+                            }
+                        }
                     }
                 ) {
-
                     Box(modifier = Modifier.padding(it)) {
                         val createUserViewModel: CreateUserViewModel = viewModel()
                         val createStoryViewModel: CreateStoryViewModel = viewModel()
@@ -172,6 +184,7 @@ class MainActivity : ComponentActivity() {
                         val editWorkLogViewModel: EditWorkLogViewModel = viewModel()
 
                         val userLoginModel: UserLoginModel = viewModel()
+                        val userEditViewModel: UserEditViewModel = viewModel()
 
                         NavHost(navController = navController, startDestination = "Home") {
                             composable("Home") {
@@ -184,13 +197,13 @@ class MainActivity : ComponentActivity() {
                                 RegisterUserScreen(
                                     userViewModel = userViewModel,
                                     navController = navController,
-                                    userEmail = createUserViewModel.userEmail,
-                                    onUserEmailChange = { newUserEmail ->
-                                        createUserViewModel.updateUserEmail(newUserEmail)
-                                    },
                                     username = createUserViewModel.username,
                                     onUsernameChange = { newUsername ->
                                         createUserViewModel.updateUsername(newUsername)
+                                    },
+                                    userEmail  = createUserViewModel.email,
+                                    onUserEmailChange = { newEmail ->
+                                        createUserViewModel.updateEmail(newEmail)
                                     },
                                     password = createUserViewModel.password,
                                     onPasswordChange = { newPassword ->
@@ -204,13 +217,13 @@ class MainActivity : ComponentActivity() {
                                     onLastNameChange = { newLastName ->
                                         createUserViewModel.updateLastName(newLastName)
                                     },
-                                    createUserFn = { username, password, firstName, lastName, userEmail ->
+                                    createUserFn = { username, email, password, firstName, lastName ->
                                         userViewModel.createUser(
                                             username,
+                                            email,
                                             hashPassword(password),
                                             firstName,
-                                            lastName,
-                                            userEmail
+                                            lastName
                                         )
                                     },
                                     grantAuthentication = { grantAuthentication() },
@@ -429,6 +442,23 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             }
+                            composable("Profile") {
+                                val currentUserIdState by currentUserId.collectAsState(initial = -1)
+                                UserProfileScreen(navController = navController,
+                                    userViewModel = userViewModel,
+                                    currentUserId = currentUserIdState
+                                )
+                            }
+                            composable("EditUser") {
+                                val currentUserIdState by currentUserId.collectAsState(initial = -1)
+                                EditUserScreen(
+                                    navController = navController,
+                                    userViewModel = userViewModel,
+                                    userEditViewModel = userEditViewModel,
+                                    currentUserId = currentUserIdState
+                                )
+                            }
+
                         }
                     }
                 }

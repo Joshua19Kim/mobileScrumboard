@@ -24,17 +24,17 @@ class UserViewModel(
     val currentUser: StateFlow<User?> = _currentUser
 
     fun createUser(username: String,
+                   email: String,
                    password: String,
                    firstName: String,
                    lastName: String,
-                   userEmail: String
     ) = viewModelScope.launch {
         val user = User(
             username = username,
+            email = email,
             password = password,
             firstName = firstName,
             lastName = lastName,
-            userEmail = userEmail,
         )
         try {
             val userId = userDao.insertUser(user)
@@ -42,6 +42,15 @@ class UserViewModel(
             Log.d("USER_VIEW_MODEL", "User inserted with id: $userId")
         } catch (e: Exception) {
             Log.e("USER_VIEW_MODEL", "Could not insert User", e)
+        }
+    }
+
+    fun updateUser(user: User)= viewModelScope.launch {
+        try {
+            userDao.updateUser(user)
+            Log.d("USER_VIEW_MODEL", "User status updated successfully")
+        } catch (e: Exception) {
+            Log.e("USER_VIEW_MODEL", "Error updating user status", e)
         }
     }
 
@@ -58,5 +67,8 @@ class UserViewModel(
     }
     suspend fun getUserByName(username: String): User? {
         return userDao.findByUsername(username)
+    }
+    suspend fun setCurrentUser(userId: Int) {
+        _currentUser.value = getUserById(userId)
     }
 }

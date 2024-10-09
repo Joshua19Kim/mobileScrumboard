@@ -10,24 +10,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.scrumboardmobile.R
 import nz.ac.canterbury.seng303.scrumboardmobile.models.User
 import nz.ac.canterbury.seng303.scrumboardmobile.util.isValidEmail
@@ -52,77 +45,10 @@ fun RegisterUserScreen(
     editCurrentUser: suspend (Int) -> Unit,
 ) {
     val context = LocalContext.current
-    var errorMessage = ""
-    var isRegistering by remember { mutableStateOf(false) }
-    var registrationError by remember { mutableStateOf<String?>(null) }
 
     userViewModel.getUsers()
     val users: List<User> by userViewModel.users.collectAsState(emptyList())
-
-    //it refresh all the input fields when app leaves this screen
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_STOP) {
-                onUserEmailChange("")
-                onUsernameChange("")
-                onPasswordChange("")
-                onFirstNameChange("")
-                onLastNameChange("")
-            }
-        }
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
-    }
-
-
-    LaunchedEffect(isRegistering) {
-        if (isRegistering) {
-            try {
-                errorMessage = ""
-                if (username.isBlank() || userEmail.isBlank() || password.isBlank() || firstName.isBlank() || lastName.isBlank()) {
-                    errorMessage += "All fields are required. "
-                }
-                if (!isValidEmail(userEmail)) {
-                    errorMessage += "Invalid email format. "
-                }
-                users.forEach { user ->
-                    if (username == user.username) {
-                        errorMessage += "Username is already taken. "
-                    }
-                    if (userEmail == user.userEmail) {
-                        errorMessage += "Email is already in use. "
-                    }
-                }
-
-                if (errorMessage.isEmpty()) {
-                    coroutineScope {
-                        createUserFn(username, password, firstName, lastName, userEmail)
-                        val user = userViewModel.getUserByName(username)
-                        if (user != null) {
-                            editCurrentUser(user.userId)
-                        }
-                    }
-                    grantAuthentication()
-                    onUserEmailChange("")
-                    onUsernameChange("")
-                    onPasswordChange("")
-                    onFirstNameChange("")
-                    onLastNameChange("")
-                    navController.navigate("AllStories")
-
-                } else {
-                    Toast.makeText(context, errorMessage, Toast.LENGTH_LONG).show()
-                }
-            } catch (e: Exception) {
-                registrationError = e.message ?: "An error occurred during registration"
-            } finally {
-                isRegistering = false
-            }
-        }
-    }
+    val userNames: List<String> = users.map { it.username }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -183,7 +109,53 @@ fun RegisterUserScreen(
 
             Button(
                 onClick = {
-                    isRegistering = true
+                userViewModel.viewModelScope.launch {
+                    when {
+                        username.trim().isEmpty() -> {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.title_empty),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+
+                        userEmail.trim().isEmpty() -> {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.email_empty),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        password.trim().isEmpty() -> {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.email_empty),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        firstName.trim().isEmpty() || lastName.trim().isEmpty() -> {
+                            Toast.makeText(context, "Enter your name", Toast.LENGTH_SHORT).show()
+                        }
+                        userNames.contains(username) -> {
+                            Toast.makeText(context, "Invalid username", Toast.LENGTH_SHORT).show()
+                        }
+                        !isValidEmail(userEmail) -> {
+                            Toast.makeText(context, "Invalid email", Toast.LENGTH_SHORT).show()
+                        }
+                        else -> {
+                            createUserFn(username,userEmail, password, firstName, lastName)
+                            onUserEmailChange("")
+                            onUsernameChange("")
+                            onPasswordChange("")
+                            onFirstNameChange("")
+                            onLastNameChange("")
+                            navController.popBackStack()
+                            //Grant Auth has to goes before current user
+                            grantAuthentication()
+                            userViewModel.currentUser.value?.let { editCurrentUser(it.userId) }
+                        }
+                    }
+                }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
