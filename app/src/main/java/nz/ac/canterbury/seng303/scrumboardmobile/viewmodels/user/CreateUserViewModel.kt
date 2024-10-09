@@ -23,4 +23,8 @@ class CreateUserViewModel: ViewModel() {
     fun updateLastName(newLastName: String) {
         lastName = newLastName
     }
+    var userEmail by mutableStateOf("")
+    fun updateUserEmail(newUserEmail: String) {
+        userEmail = newUserEmail
+    }
 }

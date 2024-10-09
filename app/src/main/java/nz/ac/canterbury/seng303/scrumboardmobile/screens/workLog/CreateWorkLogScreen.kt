@@ -32,7 +32,6 @@ fun CreateWorkLogScreen(
     workLogViewModel: WorkLogViewModel,
     taskId: Int,
 ) {
-    val scope = rememberCoroutineScope()
     var showDatePicker by remember { mutableStateOf(false) }
     val context = LocalContext.current
 

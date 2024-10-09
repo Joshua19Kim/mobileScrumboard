@@ -1,6 +1,8 @@
 package nz.ac.canterbury.seng303.scrumboardmobile.screens.task
 
 import android.widget.Toast
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,6 +66,7 @@ fun EditTaskScreen(
     val users: List<User> by userViewModel.users.collectAsState(emptyList())
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
+    val existingAssignedTo :Int? = editTaskViewModel.assignedTo
 
     var usernames = remember { mutableMapOf<Int, String>() }
     val context = LocalContext.current
@@ -327,6 +330,17 @@ fun EditTaskScreen(
                     modifier = Modifier.fillMaxWidth()
 
                 ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(text = context.getString(R.string.noAssignee))
+                        },
+                        onClick = {
+                            editTaskViewModel.updateAssignedTo(-1)
+                            editTaskViewModel.updateAssignedToString(context.getString(R.string.noAssignee))
+                            expandedAssignee = false
+                        }
+                    )
+
                     // Iterate through the user values to create dropdown items
                     users.forEach { user ->
                         DropdownMenuItem(
@@ -372,6 +386,16 @@ fun EditTaskScreen(
                     modifier = Modifier.fillMaxWidth()
 
                 ) {
+                    DropdownMenuItem(
+                        text = {
+                            Text(text = context.getString(R.string.noReviewer))
+                        },
+                        onClick = {
+                            editTaskViewModel.updateReviewerId(-1)
+                            editTaskViewModel.updateReviewerString(context.getString(R.string.noReviewer))
+                            expandedReviewer = false
+                        }
+                    )
                     // Iterate through the user values to create dropdown items
                     users.forEach { user ->
                         DropdownMenuItem(
@@ -423,6 +447,25 @@ fun EditTaskScreen(
 
                                     )
                                 )
+                                if ((existingAssignedTo != editTaskViewModel.assignedTo) && (editTaskViewModel.assignedTo != null)) {
+                                    coroutineScope.launch {
+                                        editTaskViewModel.assignedTo?.let {assignedUserId ->
+                                            val assignedUser = userViewModel.getUserById(assignedUserId)
+                                            assignedUser?.let { user ->
+                                                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                                    data = Uri.parse("mailto:")
+                                                    putExtra(Intent.EXTRA_EMAIL, arrayOf(user.username))
+                                                    putExtra(Intent.EXTRA_SUBJECT, "You Have Been Assigned To '${taskWithWorkLogs.task.title}'")
+                                                    putExtra(Intent.EXTRA_TEXT, "I have assigned you to a Scrumboard Mobile task: '${taskWithWorkLogs.task.title}'")
+                                                }
+                                                context.startActivity(intent)
+                                            }
+
+                                        }
+
+                                    }
+                                }
+
                             }
                             navController.popBackStack()
                         }

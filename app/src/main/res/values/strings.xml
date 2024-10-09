@@ -72,6 +72,7 @@
 
     <!-- Login / Register -->
     <string name="register_header">Register for ScrumBoard Mobile</string>
+    <string name="useremail">User Email</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="first_name">First Name</string>
@@ -118,7 +119,9 @@
 
     <!-- View task -->
     <string name="assignee">Assignee</string>
+    <string name="noAssignee">No Assignee</string>
     <string name="reviewer">Reviewer</string>
+    <string name="noReviewer">No Reviewer</string>
     <string name="task_updated">Task Updated</string>
     <string name="work_log_added_by">Added by</string>
     <string name="work_log_added_by_loading">Loading…</string>

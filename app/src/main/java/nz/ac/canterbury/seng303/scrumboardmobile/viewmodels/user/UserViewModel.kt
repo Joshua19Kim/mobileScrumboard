@@ -26,12 +26,15 @@ class UserViewModel(
     fun createUser(username: String,
                    password: String,
                    firstName: String,
-                   lastName: String) = viewModelScope.launch {
+                   lastName: String,
+                   userEmail: String
+    ) = viewModelScope.launch {
         val user = User(
             username = username,
             password = password,
             firstName = firstName,
-            lastName = lastName
+            lastName = lastName,
+            userEmail = userEmail,
         )
         try {
             val userId = userDao.insertUser(user)

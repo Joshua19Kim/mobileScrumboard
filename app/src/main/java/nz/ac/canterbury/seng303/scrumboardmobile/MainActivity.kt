@@ -184,6 +184,10 @@ class MainActivity : ComponentActivity() {
                                 RegisterUserScreen(
                                     userViewModel = userViewModel,
                                     navController = navController,
+                                    userEmail = createUserViewModel.userEmail,
+                                    onUserEmailChange = { newUserEmail ->
+                                        createUserViewModel.updateUserEmail(newUserEmail)
+                                    },
                                     username = createUserViewModel.username,
                                     onUsernameChange = { newUsername ->
                                         createUserViewModel.updateUsername(newUsername)
@@ -200,12 +204,13 @@ class MainActivity : ComponentActivity() {
                                     onLastNameChange = { newLastName ->
                                         createUserViewModel.updateLastName(newLastName)
                                     },
-                                    createUserFn = { username, password, firstName, lastName ->
+                                    createUserFn = { username, password, firstName, lastName, userEmail ->
                                         userViewModel.createUser(
                                             username,
                                             hashPassword(password),
                                             firstName,
-                                            lastName
+                                            lastName,
+                                            userEmail
                                         )
                                     },
                                     grantAuthentication = { grantAuthentication() },
