@@ -59,6 +59,7 @@ import nz.ac.canterbury.seng303.scrumboardmobile.screens.task.CreateTaskScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.user.RegisterUserScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.story.ViewAllStories
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.story.ViewStoryScreen
+import nz.ac.canterbury.seng303.scrumboardmobile.screens.task.EditTaskScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.task.ViewTaskScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.workLog.CreateWorkLogScreen
 import nz.ac.canterbury.seng303.scrumboardmobile.screens.user.LoginUserScreen
@@ -70,7 +71,9 @@ import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.story.CreateStoryVie
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.story.EditStoryViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.story.StoryViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.task.CreateTaskViewModel
+import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.task.EditTaskViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.task.TaskViewModel
+import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.task.ViewTaskViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.CreateUserViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserLoginModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserViewModel
@@ -162,6 +165,8 @@ class MainActivity : ComponentActivity() {
                         val editStoryViewModel: EditStoryViewModel = viewModel()
 
                         val createTaskViewModel: CreateTaskViewModel = viewModel()
+                        val editTaskViewModel: EditTaskViewModel = viewModel()
+                        val viewTaskViewModel: ViewTaskViewModel = viewModel()
 
                         val createWorkLogViewModel: CreateWorkLogViewModel = viewModel()
                         val editWorkLogViewModel: EditWorkLogViewModel = viewModel()
@@ -350,8 +355,30 @@ class MainActivity : ComponentActivity() {
                                         navController = navController,
                                         taskViewModel = taskViewModel,
                                         userViewModel = userViewModel,
+                                        viewTaskViewModel = viewTaskViewModel,
                                         storyId = storyId,
-                                        taskId = taskId,
+                                        taskId = taskId
+                                    )
+                                }
+                            }
+
+                            composable(
+                                "Story/{storyId}/Task/{taskId}/edit",
+                                arguments = listOf(
+                                    navArgument("storyId") { type = NavType.StringType },
+                                    navArgument("taskId") { type = NavType.StringType }
+                                )
+                            ) { backStackEntry ->
+                                val storyId = backStackEntry.arguments?.getString("storyId")
+
+                                val taskId = backStackEntry.arguments?.getString("taskId")
+
+                                if (storyId != null && taskId != null) {
+                                    EditTaskScreen(
+                                        navController = navController,
+                                        taskViewModel = taskViewModel,
+                                        userViewModel = userViewModel,
+                                        editTaskViewModel = editTaskViewModel,
                                     )
                                 }
                             }
@@ -387,7 +414,6 @@ class MainActivity : ComponentActivity() {
                                 )
                             ) { backStackEntry ->
                                 val workLogId = backStackEntry.arguments?.getString("workLogId")
-                                val currentUserIdState by currentUserId.collectAsState(initial = -1)
 
                                 if (workLogId != null) {
                                     EditWorkLogScreen(
@@ -398,11 +424,6 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
                             }
-
-
-
-
-
                         }
                     }
                 }

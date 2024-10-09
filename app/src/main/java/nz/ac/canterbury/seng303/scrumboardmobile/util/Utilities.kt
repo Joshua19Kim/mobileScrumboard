@@ -1,5 +1,6 @@
 package nz.ac.canterbury.seng303.scrumboardmobile.util
 
+import nz.ac.canterbury.seng303.scrumboardmobile.models.User
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -27,4 +28,11 @@ fun hashPassword(password: String, algorithm: String = "SHA-256"): String {
     return bytes.joinToString("") {
         "%02x".format(it) // Convert each byte to a hex string
     }
+}
+
+fun findUserWithId(
+    users: List<User>,
+    userId: Int
+): User? {
+    return users.find { it.userId == userId }
 }

@@ -8,6 +8,8 @@
     <string name="edit_story.label">Edit Story</string>
     <string name="log_out.label">Log Out</string>
     <string name="add_task.label">Add Task</string>
+    <string name="edit_task.label">Edit Task</string>
+
     <string name="create_task.label">Create Task</string>
     <string name="create_a_task.label">Create a Task</string>
     <string name="create_work_log.label">Add Work Log</string>
@@ -54,6 +56,7 @@
 
     <!-- Messages -->
     <string name="no_tasks.message">No tasks in this status.</string>
+    <string name="no_work_logs.message">There are no work logs for this task.</string>
 
 
     <!-- Notifications -->
@@ -97,6 +100,7 @@
     <string name="task_priority">Task Priority</string>
     <string name="task_complexity">Task Complexity</string>
     <string name="task_estimate">Task Estimate</string>
+    <string name="task_status">Task Status</string>
 
     <!-- Create Task Validation Messages -->
     <string name="title_empty.message">Title cannot be empty.</string>
@@ -112,11 +116,19 @@
     <string name="task_updated">Task Updated</string>
     <string name="work_log_added_by">Added by</string>
     <string name="work_log_added_by_loading">Loading…</string>
+    <string name="unknown_user">Unknown User</string>
+    <string name="estimated_hours">%1$dh Estimated</string>
+
 
     <!-- Create Work Log -->
     <string name="date">Date</string>
     <string name="select_date">Select Date</string>
     <string name="hours">Hours</string>
+
+    <string name="num_hours">%1$dh</string>
+    <string name="no_one">No One</string>
+
+
 
     <!-- Create Work Log Validation Messages -->
     <string name="hours_invalid.message">Enter valid working hours.</string>
