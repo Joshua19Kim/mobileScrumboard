@@ -1,0 +1,137 @@
+<resources>
+    <string name="app_name">スクラムボード モバイル</string>
+    <string name="welcome">スクラムボードへようこそ</string>
+
+    <!-- Button Labels -->
+    <string name="view_stories.label">ストーリーを表示</string>
+    <string name="create_a_story.label">ストーリーを作成</string>
+    <string name="edit_story.label">ストーリーを編集</string>
+    <string name="log_out.label">ログアウト</string>
+    <string name="add_task.label">タスクを追加</string>
+    <string name="edit_task.label">タスクを編集</string>
+
+    <string name="create_task.label">タスクを作成</string>
+    <string name="create_a_task.label">タスクを作成</string>
+    <string name="create_work_log.label">作業ログを追加</string>
+    <string name="edit_work_log.label">作業ログを編集</string>
+
+    <string name="create.label">作成</string>
+    <string name="create_story.label">ストーリーを作成</string>
+    <string name="ok.label">OK</string>
+    <string name="cancel.label">キャンセル</string>
+    <string name="login.label">ログイン</string>
+    <string name="register.label">登録</string>
+    <string name="enable.label">有効にする</string>
+    <string name="back.label">戻る</string>
+    <string name="edit.label">編集</string>
+    <string name="save.label">保存</string>
+
+    <!-- Headers -->
+    <string name="stories">ストーリー</string>
+    <string name="worklogs">作業ログ</string>
+
+    <!-- Shared Components -->
+    <string name="unset">未設定</string>
+    <string name="description">説明</string>
+    <string name="estimate">見積もり</string>
+    <string name="priority">優先度</string>
+    <string name="complexity">複雑さ</string>
+
+    <!-- Statuses -->
+    <string name="todo">やること</string>
+    <string name="in_progress">進行中</string>
+    <string name="review">レビュー</string>
+    <string name="in_review">レビュー中</string>
+    <string name="done">完了</string>
+
+    <!-- Complexity -->
+    <string name="low_complexity">低</string>
+    <string name="medium_complexity">中</string>
+    <string name="high_complexity">高</string>
+
+    <!-- Priority -->
+    <string name="low_priority">低</string>
+    <string name="normal_priority">普通</string>
+    <string name="high_priority">高</string>
+    <string name="critical_priority">クリティカル</string>
+
+    <!-- Messages -->
+    <string name="no_tasks.message">このステータスにはタスクがありません。</string>
+    <string name="no_work_logs.message">このタスクには作業ログがありません。</string>
+
+    <!-- Notifications -->
+    <string name="notification_title">スクラムボード: 期限リマインダー</string>
+    <string name="notification_message">通知メッセージ</string>
+    <string name="story_due_message">%1$s の期限が来ました。</string>
+
+    <!-- Login / Register -->
+    <string name="register_header">スクラムボードモバイルに登録</string>
+    <string name="username">ユーザー名</string>
+    <string name="password">パスワード</string>
+    <string name="first_name">名</string>
+    <string name="last_name">姓</string>
+
+    <string name="login_failed">ログインに失敗しました。</string>
+
+    <!-- Create Story -->
+    <string name="story_title">ストーリーのタイトル</string>
+    <string name="story_description">ストーリーの説明</string>
+
+    <string name="story_datetime_helper.message">
+        この日時にリマインダーが送信されます。
+    </string>
+
+    <string name="story_due_date">期限日</string>
+    <string name="story_due_time">期限時間</string>
+    <string name="due_at">期限</string>
+
+    <!-- View Stories -->
+    <string name="no_stories_available_1">利用可能なストーリーはありません。</string>
+    <string name="no_stories_available_2">ここで作成できます。</string>
+
+    <!-- View Story -->
+    <string name="prev_status">前のステータス</string>
+    <string name="next_status">次のステータス</string>
+
+    <!-- Create Task -->
+    <string name="task_title">タスクのタイトル</string>
+    <string name="task_description">タスクの説明</string>
+    <string name="task_priority">タスクの優先度</string>
+    <string name="task_complexity">タスクの複雑さ</string>
+    <string name="task_estimate">タスクの見積もり</string>
+    <string name="task_status">タスクのステータス</string>
+
+    <!-- Create Task Validation Messages -->
+    <string name="title_empty.message">タイトルは空にできません。</string>
+    <string name="description_empty.message">説明は空にできません。</string>
+    <string name="priority_unset.message">優先度は未設定にできません。</string>
+    <string name="complexity_unset.message">複雑さは未設定にできません。</string>
+    <string name="estimate_empty.message">見積もりは空にできません。</string>
+    <string name="estimate_negative.message">見積もりは正の整数でなければなりません。</string>
+
+    <!-- View task -->
+    <string name="assignee">担当者</string>
+    <string name="reviewer">レビュアー</string>
+    <string name="task_updated">タスクが更新されました</string>
+    <string name="work_log_added_by">追加者</string>
+    <string name="work_log_added_by_loading">読み込み中…</string>
+    <string name="unknown_user">不明なユーザー</string>
+    <string name="estimated_hours">%1$dh 見積もり</string>
+
+    <!-- Create Work Log -->
+    <string name="date">日付</string>
+    <string name="select_date">日付を選択</string>
+    <string name="hours">時間</string>
+
+    <string name="num_hours">%1$dh</string>
+    <string name="no_one">誰もいない</string>
+
+    <!-- Create Work Log Validation Messages -->
+    <string name="hours_invalid.message">有効な作業時間を入力してください。</string>
+
+    <!-- Dialog Messages -->
+    <string name="alarm_permission.message">
+        スクラムボードモバイルは、ストーリーの期限を通知するためにアラームとリマインダーを使用します。
+        ストーリーの期限に対する通知を有効にしますか？
+    </string>
+</resources>
