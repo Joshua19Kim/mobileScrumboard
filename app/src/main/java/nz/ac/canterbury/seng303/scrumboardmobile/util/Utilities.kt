@@ -1,5 +1,8 @@
 package nz.ac.canterbury.seng303.scrumboardmobile.util
 
+import android.content.Context
+import android.content.res.Configuration
+import android.os.Build
 import nz.ac.canterbury.seng303.scrumboardmobile.models.User
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
@@ -50,4 +53,19 @@ private val EMAIL_REGEX = Pattern.compile(
 
 fun isValidEmail(email: String): Boolean {
     return email.isNotBlank() && EMAIL_REGEX.matcher(email).matches()
+}
+
+fun setLocale(context: Context, languageCode: String) {
+    val locale = Locale(languageCode)
+    Locale.setDefault(locale)
+
+    val config = Configuration(context.resources.configuration)
+    config.setLocale(locale)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        context.createConfigurationContext(config)
+    }
+
+    @Suppress("DEPRECATION")
+    context.resources.updateConfiguration(config, context.resources.displayMetrics)
 }

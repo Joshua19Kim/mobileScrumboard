@@ -29,6 +29,7 @@
     <!-- Headers -->
     <string name="stories">ストーリー</string>
     <string name="worklogs">作業ログ</string>
+    <string name="name">名前</string>
 
     <!-- Shared Components -->
     <string name="unset">未設定</string>
@@ -67,6 +68,7 @@
     <!-- Login / Register -->
     <string name="register_header">スクラムボードモバイルに登録</string>
     <string name="username">ユーザー名</string>
+    <string name="useremail">ユーザーのメールアドレス</string>
     <string name="password">パスワード</string>
     <string name="first_name">名</string>
     <string name="last_name">姓</string>
@@ -156,6 +158,12 @@
     <string name="email_empty">メールアドレスを空欄にすることはできません。</string>
     <string name="old_password">旧パスワード</string>
     <string name="new_password">新しいパスワード</string>
+
+    <!--User Preference-->
+    <string name="select_language">言語を選択</string>
+    <string name="language">言語</string>
+    <string name="dropdown_description">ドロップダウン</string>
+    <string name="toggle_dark_mode">ダークモード</string>
 
 
 </resources>

@@ -130,8 +130,7 @@ fun EditTaskScreen(
 
     Column(
         modifier = Modifier.fillMaxSize()
-            .verticalScroll(scrollState)
-        ,
+            .verticalScroll(scrollState),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

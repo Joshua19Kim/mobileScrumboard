@@ -3,8 +3,6 @@ package nz.ac.canterbury.seng303.scrumboardmobile
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.os.Build
-import androidx.core.content.ContextCompat
 import androidx.room.Room
 import nz.ac.canterbury.seng303.scrumboardmobile.datastore.Database
 import nz.ac.canterbury.seng303.scrumboardmobile.notification.channelId

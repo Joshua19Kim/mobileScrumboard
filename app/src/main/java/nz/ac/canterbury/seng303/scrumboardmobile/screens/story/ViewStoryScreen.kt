@@ -86,7 +86,9 @@ fun ViewStoryScreen(
                         .fillMaxWidth()
                         .padding(16.dp)
                 ) {
-                    Column {
+                    Column(
+                        modifier = Modifier.fillMaxHeight()
+                    ) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth(),

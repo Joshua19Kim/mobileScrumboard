@@ -177,4 +177,11 @@
     <string name="received_notification">Received notification</string>
 
 
+    <!--User Preference-->
+    <string name="select_language">Select Language</string>
+    <string name="language">Language</string>
+    <string name="dropdown_description">Dropdown</string>
+    <string name="toggle_dark_mode">Dark Mode</string>
+    <string name="japanese">日本語</string>
+    <string name="korean">한국어</string>
 </resources>
