@@ -18,7 +18,11 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.scrumboardmobile.R
 import nz.ac.canterbury.seng303.scrumboardmobile.models.User
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserViewModel
@@ -27,7 +31,9 @@ import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserViewModel
 fun UserProfileScreen(
     navController: NavController,
     userViewModel: UserViewModel,
-    currentUserId: Int
+    currentUserId: Int,
+    removeAuthenticationFn: suspend () -> Unit,
+    editCurrentUser: suspend(Int) -> Unit
 ) {
     val context = LocalContext.current
     val userState by userViewModel.currentUser.collectAsState(null)
@@ -123,6 +129,17 @@ fun UserProfileScreen(
                 modifier = Modifier.padding(vertical = 8.dp) // Add vertical padding
             ) {
                 Text(context.getString(R.string.change_preference))
+            }
+            Button(
+                modifier = Modifier.padding(vertical = 8.dp), // Add vertical padding
+                onClick = {
+                CoroutineScope(Dispatchers.IO).launch {
+                    removeAuthenticationFn()
+                    editCurrentUser(-1)
+                }
+                navController.navigate("Home")
+            }) {
+                Text(ContextCompat.getString(context, R.string.log_out_label))
             }
         }
     }

@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
@@ -27,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
@@ -141,35 +143,62 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val appBarViewModel: AppBarViewModel = viewModel()
+                val isAuthenticated by isAuth.collectAsState(initial = false)
                 appBarViewModel.init()
                 Scaffold(
                     bottomBar = {
-                        Row(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceAround,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            IconButton(onClick = {
-                                navController.navigate("AllStories") {
-                                    popUpTo(0) { inclusive = true }
+                        if (isAuthenticated) {
+                            Row(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceAround,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                IconButton(onClick = {
+                                    navController.navigate("AllStories") {
+                                        popUpTo(0) { inclusive = true }
+                                    }
+                                }) {
+                                    Icon(Icons.Default.Home, contentDescription = "Home", modifier = Modifier.size(48.dp))
                                 }
-                            }) {
-                                Icon(Icons.Default.Home, contentDescription = "Home", modifier = Modifier.size(48.dp))
-                            }
-                            IconButton(onClick = {
-                                navController.navigate("CreateStory")
-                            }) {
-                                Icon(Icons.Default.Add, contentDescription = "Create Story", modifier = Modifier.size(48.dp))
-                            }
-                            IconButton(onClick = {
-                                navController.navigate("Profile")
-                            }) {
-                                Icon(Icons.Default.Person, contentDescription = "Profile", modifier = Modifier.size(48.dp))
+                                IconButton(onClick = {
+                                    navController.navigate("CreateStory")
+                                }) {
+                                    Icon(Icons.Default.Add, contentDescription = "Create Story", modifier = Modifier.size(48.dp))
+                                }
+                                IconButton(onClick = {
+                                    navController.navigate("Profile")
+                                }) {
+                                    Icon(Icons.Default.Person, contentDescription = "Profile", modifier = Modifier.size(48.dp))
+                                }
                             }
                         }
+                    },
+                    topBar = {
+                        // Add your AppBar content here
+                        TopAppBar(
+                            title = {
+                                navBackStackEntry?.destination?.route?.let { route ->
+                                    appBarViewModel.getNameById(route)?.run {
+                                        Text(this)
+                                    }
+                                }
+                            },
+                            navigationIcon = {
+                                if (navBackStackEntry?.destination?.route != "Home" && ! isAuthenticated) {
+                                    IconButton(onClick = { navController.popBackStack() }) {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowBack,
+                                            contentDescription = "Back"
+                                        )
+                                    }
+                                }
+                            }
+                        )
+
                     }
+
                 ) {
                     Box(modifier = Modifier.padding(it)) {
                         val createUserViewModel: CreateUserViewModel = viewModel()
@@ -189,9 +218,7 @@ class MainActivity : ComponentActivity() {
                         NavHost(navController = navController, startDestination = "Home") {
                             composable("Home") {
                                 Home(navController = navController,
-                                    isAuth = isAuth,
-                                    removeAuthenticationFn = { removeAuthentication()},
-                                    editCurrentUser = {userId -> editCurrentUser(userId)}
+                                    isAuth = isAuth
                             ) }
                             composable("Register") {
                                 RegisterUserScreen(
@@ -446,7 +473,9 @@ class MainActivity : ComponentActivity() {
                                 val currentUserIdState by currentUserId.collectAsState(initial = -1)
                                 UserProfileScreen(navController = navController,
                                     userViewModel = userViewModel,
-                                    currentUserId = currentUserIdState
+                                    currentUserId = currentUserIdState,
+                                    removeAuthenticationFn = { removeAuthentication()},
+                                    editCurrentUser = {userId -> editCurrentUser(userId)}
                                 )
                             }
                             composable("EditUser") {
@@ -470,9 +499,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Home(navController: NavController,
-         isAuth: Flow<Boolean>,
-         removeAuthenticationFn: suspend () -> Unit,
-         editCurrentUser: suspend(Int) -> Unit
+         isAuth: Flow<Boolean>
          ) {
     val isAuthenticated by isAuth.collectAsState(initial = false)
     val context = LocalContext.current
@@ -492,20 +519,7 @@ fun Home(navController: NavController,
                 Text(ContextCompat.getString(context, R.string.login_label))
             }
         } else {
-            Button(onClick = { navController.navigate("AllStories") }) {
-                Text(ContextCompat.getString(context, R.string.view_stories_label))
-            }
-            Button(onClick = { navController.navigate("CreateStory") }) {
-                Text(ContextCompat.getString(context, R.string.create_story_label))
-            }
-            Button(onClick = {
-                CoroutineScope(Dispatchers.IO).launch {
-                    removeAuthenticationFn()
-                    editCurrentUser(-1)
-                }
-            }) {
-                Text(ContextCompat.getString(context, R.string.log_out_label))
-            }
+            navController.navigate("AllStories")
         }
     }
 }
