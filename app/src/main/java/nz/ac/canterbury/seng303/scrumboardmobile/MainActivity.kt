@@ -187,7 +187,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             },
                             navigationIcon = {
-                                if (navBackStackEntry?.destination?.route != "Home" && ! isAuthenticated) {
+                                if (navBackStackEntry?.destination?.route != "AllStories" && navBackStackEntry?.destination?.route != "Home") {
                                     IconButton(onClick = { navController.popBackStack() }) {
                                         Icon(
                                             imageVector = Icons.Default.ArrowBack,

@@ -73,6 +73,9 @@
     <string name="first_name">이름</string>
     <string name="last_name">성</string>
 
+    <string name="enter_name">이름을 입력하세요</string>
+    <string name="invalid_username">유효하지 않은 사용자 이름</string>
+
     <string name="login_failed">로그인에 실패했습니다.</string>
 
     <!-- Create Story -->

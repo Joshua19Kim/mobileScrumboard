@@ -72,6 +72,8 @@
     <string name="last_name">姓</string>
     <string name="useremail">ユーザーのメール</string>
 
+    <string name="enter_name">名前を入力してください</string>
+    <string name="invalid_username">無効なユーザー名</string>
 
     <string name="login_failed">ログインに失敗しました。</string>
 

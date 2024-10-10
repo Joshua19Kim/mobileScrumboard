@@ -139,13 +139,13 @@ fun RegisterUserScreen(
                             ).show()
                         }
                         firstName.trim().isEmpty() || lastName.trim().isEmpty() -> {
-                            Toast.makeText(context, "Enter your name", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.enter_name), Toast.LENGTH_SHORT).show()
                         }
                         userNames.contains(username) -> {
-                            Toast.makeText(context, "Invalid username", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.invalid_username), Toast.LENGTH_SHORT).show()
                         }
                         !isValidEmail(userEmail) -> {
-                            Toast.makeText(context, "Invalid email", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context,  context.getString(R.string.invalidEmail), Toast.LENGTH_SHORT).show()
                         }
                         else -> {
                             createUserFn(username,userEmail, password, firstName, lastName)

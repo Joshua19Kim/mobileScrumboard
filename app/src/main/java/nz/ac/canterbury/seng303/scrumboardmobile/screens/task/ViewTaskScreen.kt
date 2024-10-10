@@ -162,7 +162,7 @@ fun TaskCard(
         Pair(ScrumboardConstants.Priority.LOW, context.getString(R.string.low_priority)),
         Pair(ScrumboardConstants.Priority.NORMAL, context.getString(R.string.normal_priority)),
         Pair(ScrumboardConstants.Priority.HIGH, context.getString(R.string.high_priority)),
-        Pair(ScrumboardConstants.Priority.CRITICAL, context.getString(R.string.high_priority))
+        Pair(ScrumboardConstants.Priority.CRITICAL, context.getString(R.string.critical_priority))
     )
     ElevatedCard(
         modifier = Modifier

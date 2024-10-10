@@ -20,11 +20,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import kotlinx.coroutines.coroutineScope
 import nz.ac.canterbury.seng303.scrumboardmobile.R
 import nz.ac.canterbury.seng303.scrumboardmobile.models.User
 import nz.ac.canterbury.seng303.scrumboardmobile.util.hashPassword
+import nz.ac.canterbury.seng303.scrumboardmobile.util.isValidEmail
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserEditViewModel
 import nz.ac.canterbury.seng303.scrumboardmobile.viewmodels.user.UserViewModel
 
@@ -131,14 +133,17 @@ fun EditUserScreen(
                         }
                         (userEditViewModel.oldPassword != "" && hashPassword(userEditViewModel.oldPassword) != userEditViewModel.password) ||
                         (userEditViewModel.oldPassword == "" && userEditViewModel.newPassword != "")  -> {
-                            Toast.makeText(context, "Incorrect password", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, context.getString(R.string.incorrect_password), Toast.LENGTH_LONG).show()
                             userEditViewModel.updateOldPassword("")
                             userEditViewModel.updateNewPassword("")
                         }
                         userEditViewModel.oldPassword != "" && userEditViewModel.newPassword == "" -> {
-                            Toast.makeText(context, "New password can not be empty", Toast.LENGTH_LONG).show()
+                            Toast.makeText(context, context.getString(R.string.no_empty_password), Toast.LENGTH_LONG).show()
                             userEditViewModel.updateOldPassword("")
                             userEditViewModel.updateNewPassword("")
+                        }
+                        !isValidEmail(userEditViewModel.email) -> {
+                            Toast.makeText(context, context.getString(R.string.invalidEmail), Toast.LENGTH_SHORT).show()
                         }
                         else -> {
                             if (user != null) {
@@ -154,7 +159,7 @@ fun EditUserScreen(
                                 userEditViewModel.updateOldPassword("")
                                 userEditViewModel.updateNewPassword("")
                                 navController.popBackStack()
-                                Toast.makeText(context, "User details saved successfully!", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.user_details_saved), Toast.LENGTH_SHORT).show()
                             }
                         }
                     }

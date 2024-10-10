@@ -3,10 +3,10 @@ package nz.ac.canterbury.seng303.scrumboardmobile.notification
 import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.work.impl.utils.ForceStopRunnable.BroadcastReceiver
 import nz.ac.canterbury.seng303.scrumboardmobile.R
 
 const val notificationId = 1
