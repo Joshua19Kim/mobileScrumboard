@@ -111,12 +111,20 @@
 
     <!-- View task -->
     <string name="assignee">担当者</string>
+    <string name="noAssignee">担当者なし</string>
     <string name="reviewer">レビュアー</string>
+    <string name="noReviewer">レビュアーなし</string>
     <string name="task_updated">タスクが更新されました</string>
     <string name="work_log_added_by">追加者</string>
     <string name="work_log_added_by_loading">読み込み中…</string>
     <string name="unknown_user">不明なユーザー</string>
     <string name="estimated_hours">%1$dh 見積もり</string>
+
+    <!-- Edit task-->
+    <string name="assignedToForEmailTitle">担当者指定 %1$s</string>
+    <string name="assignedToForEmailBody">Scrumboard Mobileのタスクがあなたに割り当てられました: %1$s</string>
+    <string name="reviewForEmailTitle">タスクのレビュー %1$s</string>
+    <string name="reviewForEmailBody">Scrumboard Mobileのタスクのレビュアーとしてあなたが指定されました: %1$s</string>
 
     <!-- Create Work Log -->
     <string name="date">日付</string>
@@ -134,4 +142,16 @@
         スクラムボードモバイルは、ストーリーの期限を通知するためにアラームとリマインダーを使用します。
         ストーリーの期限に対する通知を有効にしますか？
     </string>
+
+    <string name="profile">プロフィール</string>
+    <string name="change_preference">設定変更 </string>
+    <string name="email">メール</string>
+
+    <!-- Edit User-->
+    <string name="title_empty">ユーザー名を空欄にすることはできません。</string>
+    <string name="email_empty">メールアドレスを空欄にすることはできません。</string>
+    <string name="old_password">旧パスワード</string>
+    <string name="new_password">新しいパスワード</string>
+
+
 </resources>

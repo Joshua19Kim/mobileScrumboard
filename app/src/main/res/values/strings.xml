@@ -130,6 +130,12 @@
     <string name="estimated_hours">%1$dh Estimated</string>
 
 
+    <!-- Edit task-->
+    <string name="assignedToForEmailTitle">Assigned To %1$s</string>
+    <string name="assignedToForEmailBody">I have assigned you to a Scrumboard Mobile task: %1$s</string>
+    <string name="reviewForEmailTitle">Review The Task %1$s</string>
+    <string name="reviewForEmailBody">I have assigned you as a reviewer to a Scrumboard Mobile task: %1$s</string>
+
     <!-- Create Work Log -->
     <string name="date">Date</string>
     <string name="select_date">Select Date</string>

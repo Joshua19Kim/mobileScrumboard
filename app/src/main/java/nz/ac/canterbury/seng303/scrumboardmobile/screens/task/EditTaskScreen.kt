@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import nz.ac.canterbury.seng303.scrumboardmobile.R
 import nz.ac.canterbury.seng303.scrumboardmobile.models.ScrumboardConstants
@@ -57,7 +58,8 @@ fun EditTaskScreen(
     navController: NavController,
     taskViewModel: TaskViewModel,
     userViewModel: UserViewModel,
-    editTaskViewModel: EditTaskViewModel
+    editTaskViewModel: EditTaskViewModel,
+    currentUserId: Int
 ) {
     val selectedTaskState by taskViewModel.selectedTaskWithWorkLogs.collectAsState(null)
     val taskWithWorkLogs: TaskWithWorkLogs? = selectedTaskState
@@ -66,7 +68,9 @@ fun EditTaskScreen(
     val users: List<User> by userViewModel.users.collectAsState(emptyList())
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
-    val existingAssignedTo :Int? = editTaskViewModel.assignedTo
+    val existingAssignedTo :Int? = selectedTaskState?.task?.assignedTo
+    val existingReviewerId :Int? = selectedTaskState?.task?.reviewerId
+
 
     var usernames = remember { mutableMapOf<Int, String>() }
     val context = LocalContext.current
@@ -90,7 +94,7 @@ fun EditTaskScreen(
         Pair(ScrumboardConstants.Priority.LOW, context.getString(R.string.low_priority)),
         Pair(ScrumboardConstants.Priority.NORMAL, context.getString(R.string.normal_priority)),
         Pair(ScrumboardConstants.Priority.HIGH, context.getString(R.string.high_priority)),
-        Pair(ScrumboardConstants.Priority.CRITICAL, context.getString(R.string.high_priority))
+        Pair(ScrumboardConstants.Priority.CRITICAL, context.getString(R.string.critical_priority))
     )
 
     LaunchedEffect(taskWithWorkLogs) {
@@ -447,25 +451,66 @@ fun EditTaskScreen(
 
                                     )
                                 )
-                                if ((existingAssignedTo != editTaskViewModel.assignedTo) && (editTaskViewModel.assignedTo != null)) {
-                                    coroutineScope.launch {
-                                        editTaskViewModel.assignedTo?.let {assignedUserId ->
-                                            val assignedUser = userViewModel.getUserById(assignedUserId)
+
+                                coroutineScope.launch {
+                                    val intents = mutableListOf<Intent>()
+
+                                    if (existingAssignedTo != editTaskViewModel.assignedTo && editTaskViewModel.assignedTo != null && currentUserId != editTaskViewModel.assignedTo) {
+                                        editTaskViewModel.assignedTo?.let { assignedUserId ->
+                                            val assignedUser =
+                                                userViewModel.getUserById(assignedUserId)
                                             assignedUser?.let { user ->
                                                 val intent = Intent(Intent.ACTION_SENDTO).apply {
                                                     data = Uri.parse("mailto:")
-                                                    putExtra(Intent.EXTRA_EMAIL, arrayOf(user.email))
-                                                    putExtra(Intent.EXTRA_SUBJECT, "You Have Been Assigned To '${taskWithWorkLogs.task.title}'")
-                                                    putExtra(Intent.EXTRA_TEXT, "I have assigned you to a Scrumboard Mobile task: '${taskWithWorkLogs.task.title}'")
+                                                    putExtra(
+                                                        Intent.EXTRA_EMAIL,
+                                                        arrayOf(user.email)
+                                                    )
+                                                    putExtra(
+                                                        Intent.EXTRA_SUBJECT,
+                                                        context.getString(R.string.assignedToForEmailTitle, taskWithWorkLogs.task.title)
+                                                    )
+                                                    putExtra(
+                                                        Intent.EXTRA_TEXT,
+                                                        context.getString(R.string.assignedToForEmailBody, taskWithWorkLogs.task.title)
+                                                    )
                                                 }
-                                                context.startActivity(intent)
+                                                intents.add(intent)
                                             }
-
                                         }
+                                    }
 
+                                    if (existingReviewerId != editTaskViewModel.reviewerId && editTaskViewModel.reviewerId != null && currentUserId != editTaskViewModel.reviewerId) {
+                                        editTaskViewModel.reviewerId?.let { reviewerId ->
+                                            val reviewer = userViewModel.getUserById(reviewerId)
+                                            reviewer?.let { user ->
+                                                val intent = Intent(Intent.ACTION_SENDTO).apply {
+                                                    data = Uri.parse("mailto:")
+                                                    putExtra(
+                                                        Intent.EXTRA_EMAIL,
+                                                        arrayOf(user.email)
+                                                    )
+                                                    putExtra(
+                                                        Intent.EXTRA_SUBJECT,
+                                                        context.getString(R.string.reviewForEmailTitle, taskWithWorkLogs.task.title)
+                                                    )
+                                                    putExtra(
+                                                        Intent.EXTRA_TEXT,
+                                                        context.getString(R.string.reviewForEmailBody, taskWithWorkLogs.task.title)
+                                                    )
+                                                }
+                                                intents.add(intent)
+                                            }
+                                        }
+                                    }
+
+                                    intents.forEachIndexed { index, intent ->
+                                        context.startActivity(intent)
+                                        if (index < intents.size - 1) {
+                                            delay(1000)
+                                        }
                                     }
                                 }
-
                             }
                             navController.popBackStack()
                         }
