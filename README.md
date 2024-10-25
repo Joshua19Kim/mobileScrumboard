@@ -2,10 +2,10 @@
 A mobile version of ScrumBoard with `Kotlin` using `Jetpack Compose`
 
 ## Authors
-Joel Bremner 73313842
+Joel Bremner
 
-John Chan 24764422
+John Chan 
 
-Yunu Cho 55980075
+Yunu Cho 
 
-Joshua Kim 68493559
+Joshua Kim 
